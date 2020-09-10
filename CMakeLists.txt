@@ -7,6 +7,7 @@ find_package(laser_geometry REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -41,6 +42,7 @@ ament_target_dependencies(pointcloud_to_laserscan
   "message_filters"
   "rclcpp"
   "rclcpp_components"
+  "rclcpp_lifecycle"
   "sensor_msgs"
   "tf2"
   "tf2_ros"
@@ -58,6 +60,19 @@ ament_target_dependencies(dummy_pointcloud_publisher
   "sensor_msgs"
 )
 
+add_executable(pointcloud_to_laserscan_managed src/pointcloud_to_laserscan_managed_node.cpp)
+ament_target_dependencies(pointcloud_to_laserscan_managed 
+  "laser_geometry"
+  "message_filters"
+  "rclcpp"
+  "rclcpp_components"
+  "rclcpp_lifecycle"
+  "sensor_msgs"
+  "tf2"
+  "tf2_ros"
+  "tf2_sensor_msgs"
+)
+
 install(TARGETS
   laserscan_to_pointcloud
   pointcloud_to_laserscan
@@ -66,6 +81,7 @@ install(TARGETS
   ARCHIVE DESTINATION lib)
 
 install(TARGETS
+  pointcloud_to_laserscan_managed
   dummy_pointcloud_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
