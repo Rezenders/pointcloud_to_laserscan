@@ -61,7 +61,7 @@ using CallbackReturnT =
 PointCloudToLaserScanNode::PointCloudToLaserScanNode(const std::string name)
 : rclcpp_lifecycle::LifecycleNode(name)
 {
-  
+  declare_parameter("node_name");
 }
 
 PointCloudToLaserScanNode::~PointCloudToLaserScanNode()
