@@ -61,7 +61,7 @@ using CallbackReturnT =
 PointCloudToLaserScanNode::PointCloudToLaserScanNode(const std::string name)
 : rclcpp_lifecycle::LifecycleNode(name)
 {
-  declare_parameter("node_name");
+  declare_parameter("node_name", "pointcloud_to_laserscan_node");
 }
 
 PointCloudToLaserScanNode::~PointCloudToLaserScanNode()
@@ -93,7 +93,7 @@ CallbackReturnT PointCloudToLaserScanNode::on_configure(const rclcpp_lifecycle::
   use_inf_ = this->declare_parameter("use_inf", true);
 
   pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS());
-  
+
   using std::placeholders::_1;
   // if pointcloud target frame specified, we need to filter by transform availability
   if (!target_frame_.empty()) {
@@ -113,24 +113,24 @@ CallbackReturnT PointCloudToLaserScanNode::on_configure(const rclcpp_lifecycle::
   }
   subscription_listener_thread_ = std::thread(
     std::bind(&PointCloudToLaserScanNode::subscriptionListenerThreadLoop, this));
-  
+
   return CallbackReturnT::SUCCESS;
 }
 
-CallbackReturnT PointCloudToLaserScanNode::on_activate(const rclcpp_lifecycle::State & state) 
+CallbackReturnT PointCloudToLaserScanNode::on_activate(const rclcpp_lifecycle::State & state)
 {
   RCLCPP_INFO(get_logger(), "[%s] Activating from [%s] state...", get_name(), state.label().c_str());
   pub_->on_activate();
   return CallbackReturnT::SUCCESS;
 }
 
-CallbackReturnT PointCloudToLaserScanNode::on_deactivate(const rclcpp_lifecycle::State & state) 
+CallbackReturnT PointCloudToLaserScanNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   RCLCPP_INFO(get_logger(), "[%s] Deactivating from [%s] state...", get_name(), state.label().c_str());
   return CallbackReturnT::SUCCESS;
 }
 
-CallbackReturnT PointCloudToLaserScanNode::on_shutdown(const rclcpp_lifecycle::State & state) 
+CallbackReturnT PointCloudToLaserScanNode::on_shutdown(const rclcpp_lifecycle::State & state)
 {
   RCLCPP_INFO(get_logger(), "[%s] Shutting Down from [%s] state...", get_name(), state.label().c_str());
   alive_.store(false);
@@ -170,7 +170,7 @@ void PointCloudToLaserScanNode::cloudCallback(
 {
   if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
     return;
-    
+
   // build laserscan output
   auto scan_msg = std::make_unique<sensor_msgs::msg::LaserScan>();
   scan_msg->header = cloud_msg->header;
